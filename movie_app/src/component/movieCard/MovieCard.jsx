@@ -1,22 +1,22 @@
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography, CardActions, Button } from '@mui/material';
+import { useMoveContext } from '../../context/MovieContext';
+import { useState } from "react";
 
 export const MovieCard = ({ movie }) => {
+    const { favos, addFavorites, removeFavo, isFavorite } = useMoveContext()
+    const [favoButtonText, setFavoButtonText] = useState("Add To Favorites");
+    const handleFavo = () => {
+        console.log("called")
+        addFavorites(movie);
+        if (isFavorite(movie)) setFavoButtonText("Remove Favorite")
+        else setFavoButtonText("Add To Favorites");
+    }
     const {
-        adult,
-        backdrop_path,
-        genre_ids,
-        id,
-        original_language,
         original_title,
-        overview,
-        popularity,
         poster_path,
         release_date,
         title,
-        video,
-        vote_average,
-        vote_count
     } = movie;
 
     return (
@@ -24,7 +24,6 @@ export const MovieCard = ({ movie }) => {
             {/* Movie Image */}
             <CardMedia
                 component="img"
-                height="140"
                 image={`https://image.tmdb.org/t/p/w500${poster_path}`} // Replace with actual image URL
                 alt={title}
             />
@@ -38,7 +37,7 @@ export const MovieCard = ({ movie }) => {
                     Release Date: {release_date}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    This is a movie description or tagline.
+                    Vote Count : {original_title}
                 </Typography>
             </CardContent>
 
@@ -47,8 +46,9 @@ export const MovieCard = ({ movie }) => {
                 <Button size="small" color="primary">
                     Learn More
                 </Button>
-                <Button size="small" color="secondary">
-                    Add to Favorites
+                <Button onClick={() => { handleFavo() }} size="small" color="secondary">
+                    {favoButtonText}
+
                 </Button>
             </CardActions>
         </Card>

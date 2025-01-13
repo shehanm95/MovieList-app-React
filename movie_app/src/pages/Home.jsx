@@ -1,6 +1,6 @@
 import { MovieCard } from '../component/movieCard/MovieCard';
-import { Box, TextField, Button } from '@mui/material';
-import { getPopularMovies } from '../services/api';
+import { Box, TextField, Button, dividerClasses } from '@mui/material';
+import { getPopularMovies, getSearchMovies } from '../services/api';
 import React, { useState, useEffect } from 'react';
 
 export const Home = () => {
@@ -26,9 +26,22 @@ export const Home = () => {
 
     const [searchText, setSearchText] = useState("");
 
-    const handleOnSubmit = (e) => {
+    const handleOnSubmit = async (e) => {
         e.preventDefault();
-        setSearchText(""); // Optional: Clear search input
+        if (loading) return;
+        if (!searchText.trim()) return;
+        setLoading(true);
+        try {
+            console.log('search text was : ', searchText)
+            const movieResults = await getSearchMovies(searchText);
+            setMovieList(movieResults);
+            setErrors(null)
+        } catch (e) {
+            setErrors("Failed to load movies");
+        } finally {
+            setLoading(false);
+        }
+
     };
 
     return (
@@ -53,6 +66,8 @@ export const Home = () => {
                     </Button>
                 </form>
             </Box>
+            {/* If Errors */}
+            {errors && <Box>{errors}</Box>}
 
             {/* Movie List */}
             <Box
@@ -63,11 +78,10 @@ export const Home = () => {
                     justifyContent: 'center', // Changed from 'flex-start' to 'center'
                 }}
             >
-                {movieList
-                    .filter((movie) => movie.title.toLowerCase().includes(searchText.toLowerCase()))
-                    .map((movie) => (
+                {loading ? <div className='loading'>Loading....</div> :
+                    movieList.map((movie) => (
                         <Box key={movie.id} sx={{ flex: '1 1 calc(25% - 16px)', minWidth: '250px', maxWidth: '300px' }}>
-                            <MovieCard movie={movie} />
+                            <MovieCard movie={movie} key={movie.id} />
                         </Box>
                     ))}
             </Box>
