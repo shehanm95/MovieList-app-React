@@ -46,7 +46,7 @@ export const Favorites = () => {
                     display: 'flex',
                     flexWrap: 'wrap',
                     gap: 2,
-                    justifyContent: 'center', // Changed from 'flex-start' to 'center'
+                    justifyContent: 'center',
                 }}
             >
                 {favos.map((movie) => (
