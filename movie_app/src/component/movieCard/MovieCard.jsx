@@ -4,14 +4,16 @@ import { useMoveContext } from '../../context/MovieContext';
 import { useState } from "react";
 
 export const MovieCard = ({ movie }) => {
-    const { favos, addFavorites, removeFavo, isFavorite } = useMoveContext()
-    const [favoButtonText, setFavoButtonText] = useState("Add To Favorites");
+    const { addFavorites, removeFavo, isFavorite } = useMoveContext();
+
     const handleFavo = () => {
-        console.log("called")
-        addFavorites(movie);
-        if (isFavorite(movie)) setFavoButtonText("Remove Favorite")
-        else setFavoButtonText("Add To Favorites");
-    }
+        if (isFavorite(movie)) {
+            removeFavo(movie);
+        } else {
+            addFavorites(movie);
+        }
+    };
+
     const {
         original_title,
         poster_path,
@@ -24,7 +26,7 @@ export const MovieCard = ({ movie }) => {
             {/* Movie Image */}
             <CardMedia
                 component="img"
-                image={`https://image.tmdb.org/t/p/w500${poster_path}`} // Replace with actual image URL
+                image={`https://image.tmdb.org/t/p/w500${poster_path}`}
                 alt={title}
             />
 
@@ -37,7 +39,7 @@ export const MovieCard = ({ movie }) => {
                     Release Date: {release_date}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                    Vote Count : {original_title}
+                    Original Name: {original_title}
                 </Typography>
             </CardContent>
 
@@ -46,9 +48,8 @@ export const MovieCard = ({ movie }) => {
                 <Button size="small" color="primary">
                     Learn More
                 </Button>
-                <Button onClick={() => { handleFavo() }} size="small" color="secondary">
-                    {favoButtonText}
-
+                <Button onClick={handleFavo} size="small" color="secondary">
+                    {isFavorite(movie) ? "Remove Favorite" : "Add To Favorites"}
                 </Button>
             </CardActions>
         </Card>

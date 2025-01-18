@@ -18,14 +18,18 @@ export const MovieProvider = ({ children }) => {
     }, [favos]);
 
     const addFavorites = (movie) => {
-        console.log(movie)
+        if (favos.some(mo => mo.id == movie.id)) return;
+        console.log("added")
         setFavos(prev => [...prev, movie])
+        console.log(favos)
     }
-    const removeFavo = (movie) => {
-        setFavos(prev => prev.filter(movie => movie.id != movie.id))
+    const removeFavo = (movieToRemove) => {
+        setFavos(prev => prev.filter(movie => movie.id != movieToRemove.id))
+        console.log("removed")
+        console.log(favos)
     }
     const isFavorite = (movie) => {
-        favos.some(m => m.id == movie.id)
+        return favos.some(m => m.id == movie.id)
     }
     const value = { favos, addFavorites, removeFavo, isFavorite }
 

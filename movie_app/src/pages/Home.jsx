@@ -8,6 +8,7 @@ export const Home = () => {
     const [errors, setErrors] = useState(null);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         const functionToCall = async () => {
             try {
@@ -24,26 +25,30 @@ export const Home = () => {
         functionToCall();
     }, []);
 
+
     const [searchText, setSearchText] = useState("");
 
     const handleOnSubmit = async (e) => {
         e.preventDefault();
         if (loading) return;
-        if (!searchText.trim()) return;
+
         setLoading(true);
         try {
-            console.log('search text was : ', searchText)
-            const movieResults = await getSearchMovies(searchText);
-            setMovieList(movieResults);
-            setErrors(null)
+            if (!searchText.trim()) {
+                const popularMovies = await getPopularMovies();
+                setMovieList(popularMovies);
+            } else {
+                const movieResults = await getSearchMovies(searchText);
+                setMovieList(movieResults);
+            }
+            setErrors(null);
         } catch (e) {
+            console.error(e);
             setErrors("Failed to load movies");
         } finally {
             setLoading(false);
         }
-
     };
-
     return (
         <Box sx={{ p: 4 }}>
             {/* Search Bar */}
